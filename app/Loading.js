@@ -2,10 +2,10 @@ import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Loading = () => {
-  const rows = 5; // تعداد ردیف اسکلتون
+  const rows = 5;
 
   return (
-    <table className="min-w-full border mt-4 animate-pulse">
+    <table className="w-11/12 mx-auto border mt-4 animate-pulse">
       <thead className="bg-gray-200 text-gray-700">
         <tr>
           <th className="p-2 border">عملیات</th>
