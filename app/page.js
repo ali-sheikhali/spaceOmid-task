@@ -7,6 +7,7 @@ import UsersTable from "./components/UsersTable";
 import { Loading } from "./Loading";
 import { useIsMobile } from "./hooks/useIsMobile";
 import { BottomSheet } from "./components/BottomSheet";
+import { EditUserModal } from "./components/EditUserModal";
 
 export default function Home() {
   const isMobile = useIsMobile();
@@ -49,7 +50,7 @@ export default function Home() {
       )}
 
       <BottomSheet  isOpen={isOpen} setIsOpen={setIsOpen} title="ویرایش کاربر">
-        hello it .s me
+        <EditUserModal />
       </BottomSheet>
       
     </div>

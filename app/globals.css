@@ -110,12 +110,20 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@font-face {
+  font-family: "iran-sans";
+  src: url("/iransans/IRANSans-Medium-web.woff2") format("woff2"),
+    url("/iransans/IRANSans-Medium-web.woff") format("woff"),
+    url("/iransans/IRANSans-Medium-web.ttf") format("truetype");
+}
+
 @layer base {
   * {
+    font-family:"iran-sans";
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground ;
   }
 }
 
