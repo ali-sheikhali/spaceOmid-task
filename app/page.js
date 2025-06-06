@@ -12,7 +12,7 @@ import { EditUserModal } from "./components/EditUserModal";
 export default function Home() {
   const isMobile = useIsMobile();
  
-  const [editUser , setEditUser] = useState([])
+  const [editUserData, setEditUserData] = useState(null);
   const [isOpen , setIsOpen] = useState(false)
   const dispatch = useDispatch();
   const { list: users, loading, error } = useSelector((state) => state.users);
@@ -31,7 +31,7 @@ export default function Home() {
     console.log("edit");
     if (isMobile) {
       setIsOpen(true)
-      setEditUser(user)
+      setEditUserData(user)
     } else {
       // جایگزین کن با مودال دسکتاپ
       alert("Open desktop modal");
@@ -50,7 +50,7 @@ export default function Home() {
       )}
 
       <BottomSheet  isOpen={isOpen} setIsOpen={setIsOpen} title="ویرایش کاربر">
-        <EditUserModal />
+        <EditUserModal setIsOpen={setIsOpen} editUserData={editUserData} />
       </BottomSheet>
       
     </div>

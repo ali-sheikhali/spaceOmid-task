@@ -19,6 +19,15 @@ export const deleteUser = createAsyncThunk("users/deleteUser", async (id) => {
   });
   return id;
 });
+// edit user 
+
+export const editUser = createAsyncThunk("users/editUser", async ({ id, updatedUser }) => {
+  const res = await axios.put(`https://reqres.in/api/users/${id}`, updatedUser, {
+    headers: { "x-api-key": "reqres-free-v1" },
+  });
+  return { id, updatedUser: res.data };
+});
+
 
 const usersSlice = createSlice({
   name: "users",
@@ -46,6 +55,14 @@ const usersSlice = createSlice({
       // Delete User
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.list = state.list.filter((user) => user.id !== action.payload);
+      })
+
+      .addCase(editUser.fulfilled, (state, action) => {
+        const { id, updatedUser } = action.payload;
+        const index = state.list.findIndex(user => user.id === id);
+        if (index !== -1) {
+          state.list[index] = { ...state.list[index], ...updatedUser };
+        }
       });
   },
 });
