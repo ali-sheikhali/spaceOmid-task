@@ -7,7 +7,7 @@ export const useIsMobile = (breakpoint = 768) => {
 
         handleResize()
         window.addEventListener("resize" , handleResize)
-        return window.removeEventListener("resize" , handleResize)
+         return () => window.removeEventListener("resize", handleResize);
     }, [breakpoint])
   return isMobile
 }

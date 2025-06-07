@@ -28,6 +28,31 @@ export default function Home() {
     dispatch(fetchUsers());
   }, [dispatch]);
 
+  // implement resize screen
+  useEffect(() => {
+  if (editUserData) {
+    if (isMobile) {
+  
+      setOpenModal(false);
+      setIsOpen(false);
+    } else {
+ 
+      setIsOpen(false);
+      setOpenModal(false);
+    }
+  }
+
+  if (openAddUserModal || openAddUserBottomSheet) {
+    if (isMobile) {
+      setOpenAddUserModal(false);
+      setOpenAddUserBottomSheet(flase);
+    } else {
+      setOpenAddUserBottomSheet(false);
+      setOpenAddUserModal(flase)
+    }
+  }
+}, [isMobile]);
+
   // delete user
   const handleDelete = (userId) => {
     dispatch(deleteUser(userId));
