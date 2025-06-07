@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { MdEmail } from "react-icons/md";
 import { FaUserAlt } from "react-icons/fa";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
+import Loading from "@/app/loading";
 
 const UserDetails = () => {
   const { id } = useParams();
@@ -16,8 +17,8 @@ const UserDetails = () => {
 
   if (!users || users.length === 0) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200">
-        <p className="text-lg font-medium animate-pulse">در حال بارگذاری...</p>
+      <div className="min-h-screen flex justify-center items-center">
+        <Loading />
       </div>
     );
   }

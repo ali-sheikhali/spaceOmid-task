@@ -2,9 +2,8 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers, deleteUser } from "./store/usersSlice";
-import { Navbar } from "./components/Navbar";
 import UsersTable from "./components/UsersTable";
-import { Loading } from "./Loading";
+import { TableLoading } from "./TableLoading";
 import { useIsMobile } from "./hooks/useIsMobile";
 import { BottomSheet } from "./components/BottomSheet";
 import { EditUserModal } from "./components/EditUserModal";
@@ -12,6 +11,7 @@ import { EditModal } from "./components/EditModal";
 import { IoIosAdd } from "react-icons/io";
 import { AddUser } from "./components/AddUser";
 import { IoReload } from "react-icons/io5";
+import Loading from "./loading";
 
 export default function Home() {
   const isMobile = useIsMobile();
@@ -30,29 +30,34 @@ export default function Home() {
 
   // implement resize screen
   useEffect(() => {
-  if (editUserData) {
-    if (isMobile) {
-  
-      setOpenModal(false);
-      setIsOpen(false);
-    } else {
- 
-      setIsOpen(false);
-      setOpenModal(false);
+    if (editUserData) {
+      if (isMobile) {
+        setOpenModal(false);
+        setIsOpen(false);
+      } else {
+        setIsOpen(false);
+        setOpenModal(false);
+      }
     }
-  }
 
-  if (openAddUserModal || openAddUserBottomSheet) {
-    if (isMobile) {
-      setOpenAddUserModal(false);
-      setOpenAddUserBottomSheet(flase);
-    } else {
-      setOpenAddUserBottomSheet(false);
-      setOpenAddUserModal(flase)
+    if (openAddUserModal || openAddUserBottomSheet) {
+      if (isMobile) {
+        setOpenAddUserModal(false);
+        setOpenAddUserBottomSheet(flase);
+      } else {
+        setOpenAddUserBottomSheet(false);
+        setOpenAddUserModal(flase);
+      }
     }
-  }
-}, [isMobile]);
+  }, [isMobile]);
 
+  if (isMobile === null || loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <Loading />
+      </div>
+    );
+  }
   // delete user
   const handleDelete = (userId) => {
     dispatch(deleteUser(userId));
@@ -80,8 +85,7 @@ export default function Home() {
   };
   return (
     <div>
-      <Navbar />
-      {loading && <Loading />}
+      {loading && <TableLoading />}
       {error && <p className="text-red-500">خطا در دریافت اطلاعات</p>}
       {!loading && !error && (
         <div className="w-11/12 mx-auto mt-10">
@@ -94,7 +98,7 @@ export default function Home() {
               <IoIosAdd size={25} />
             </button>
             <button
-              onClick={()=> window.location.reload()}
+              onClick={() => window.location.reload()}
               className="bg-[#092748] cursor-pointer flex items-center gap-1 text-white text-sm px-3 py-1 rounded-md"
             >
               بارگزاری مجدد

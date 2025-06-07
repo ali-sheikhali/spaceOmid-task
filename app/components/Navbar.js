@@ -20,6 +20,8 @@ export const Navbar = () => {
           width={150}
           height={150}
           alt="in-the-name-of-god"
+          className="object-contain"
+          priority
         />
         <div className="md:hidden  cursor-pointer" onClick={handleNavBarClick}>
           <RiMenu3Line size={30} />
@@ -28,15 +30,22 @@ export const Navbar = () => {
           <li className="text-[#e7a42b] cursor-pointer">خانه</li>
           <li className="hover:text-[#e7a42b] cursor-pointer">محصولات</li>
           <li className="hover:text-[#e7a42b] cursor-pointer">خدمات</li>
-          <li className="hover:text-[#e7a42b] cursor-pointer">اخبار و مقالات</li>
+          <li className="hover:text-[#e7a42b] cursor-pointer">
+            اخبار و مقالات
+          </li>
           <li className="hover:text-[#e7a42b] cursor-pointer">درباره ما</li>
         </ul>
-        <Image src={logo} width={100} height={100} alt="logo" />
+        <Image
+          src={logo}
+          width={100}
+          height={100}
+          alt="logo"
+          className="object-contain"
+          priority
+        />
       </div>
 
-      {openNavBar && (
-       <MobileNavBar setOpenNavBar={setOpenNavBar} />
-      )}
+      {openNavBar && <MobileNavBar setOpenNavBar={setOpenNavBar} />}
     </div>
   );
 };
