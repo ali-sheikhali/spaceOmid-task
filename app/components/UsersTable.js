@@ -7,10 +7,12 @@ import {
 } from "@tanstack/react-table";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 export default function UsersTable({ users, onEdit, onDelete }) {
-  const data = useMemo(() => users, [users]);
+  const router = useRouter();
 
+  const data = useMemo(() => users, [users]);
   const columns = useMemo(
     () => [
       {
@@ -20,13 +22,19 @@ export default function UsersTable({ users, onEdit, onDelete }) {
           <div className="flex gap-2 justify-center">
             <button
               className=" text-white px-2 py-1 rounded"
-              onClick={() => onEdit(row.original)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(row.original);
+              }}
             >
               <MdOutlineEdit color="black" size={20} />
             </button>
             <button
               className="  text-white px-2 py-1 rounded"
-              onClick={() => onDelete(row.original.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(row.original.id);
+              }}
             >
               <FaRegTrashAlt color="red" />
             </button>
@@ -35,7 +43,7 @@ export default function UsersTable({ users, onEdit, onDelete }) {
       },
       {
         header: "آواتار",
-        accessorKey: "avatar",
+        accessorFn: (row) => row?.avatar ?? "",
         cell: ({ getValue }) => (
           <div className="flex justify-center items-center">
             <img
@@ -87,7 +95,11 @@ export default function UsersTable({ users, onEdit, onDelete }) {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="hover:bg-gray-50">
+            <tr
+              key={row.id}
+              className="hover:bg-gray-50"
+              onClick={() => router.push(`/users/${row.original.id}`)}
+            >
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id} className="p-2 text-center border">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

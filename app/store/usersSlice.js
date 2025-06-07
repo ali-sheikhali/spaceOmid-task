@@ -19,8 +19,8 @@ export const deleteUser = createAsyncThunk("users/deleteUser", async (id) => {
   });
   return id;
 });
-// edit user 
 
+// edit user 
 export const editUser = createAsyncThunk("users/editUser", async ({ id, updatedUser }) => {
   const res = await axios.put(`https://reqres.in/api/users/${id}`, updatedUser, {
     headers: { "x-api-key": "reqres-free-v1" },
@@ -28,6 +28,13 @@ export const editUser = createAsyncThunk("users/editUser", async ({ id, updatedU
   return { id, updatedUser: res.data };
 });
 
+// add user
+// export const addUser = createAsyncThunk("users/addUser" , async (newUser)=>{
+//   const res = axios.post("https://reqres.in/api/users", newUser , {
+//     headers:{"x-api-key": "reqres-free-v1"}
+//   })
+//   return res.data
+// })
 
 const usersSlice = createSlice({
   name: "users",
@@ -36,7 +43,11 @@ const usersSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+  addUser: (state, action) => {
+    state.list.push(action.payload);
+  },
+},
   extraReducers: (builder) => {
     builder
       // Fetch Users
@@ -56,15 +67,20 @@ const usersSlice = createSlice({
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.list = state.list.filter((user) => user.id !== action.payload);
       })
-
+      // edit user
       .addCase(editUser.fulfilled, (state, action) => {
         const { id, updatedUser } = action.payload;
         const index = state.list.findIndex(user => user.id === id);
         if (index !== -1) {
           state.list[index] = { ...state.list[index], ...updatedUser };
         }
-      });
+      })
+      // // add user
+      // .addCase(addUser.fulfilled , (state , action)=>{
+      //     state.list.push(action.payload);
+      // })
   },
 });
 
+export const { addUser } = usersSlice.actions;
 export default usersSlice.reducer;
