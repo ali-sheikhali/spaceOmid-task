@@ -6,7 +6,7 @@ export const EditModal = ({ children, setIsOpen, title, isOpen }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm text-black"
       onClick={() => setIsOpen(false)}
     >
       <div

@@ -26,7 +26,7 @@ const UserDetails = () => {
   if (!user) return notFound();
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-4 bg-gradient-to-br from-gray-100 to-gray-200">
+    <div className="flex justify-center items-center min-h-screen p-4 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
       <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-6 animate-fade-in flex flex-col items-center gap-4 transition-all">
         <div className="w-full flex justify-between items-center mb-2">
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">

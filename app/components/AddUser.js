@@ -5,10 +5,13 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../store/usersSlice";
 import { IoIosAdd } from "react-icons/io";
 import { toast } from "sonner";
+import sun from "../../public/sun.jpg";
+import { IoMdClose } from "react-icons/io";
 
-export const AddUser = ({ setIsOpen }) => {
+export const AddUser = () => {
   const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState(null);
+  // console.log("image prev: " , imagePreview);
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required("لطفا نام را وارد کنید"),
@@ -26,6 +29,8 @@ export const AddUser = ({ setIsOpen }) => {
     },
     validationSchema,
     onSubmit: (values) => {
+      console.log("values: ", values);
+
       const newUser = {
         id: Date.now(),
         first_name: values.first_name,
@@ -33,57 +38,60 @@ export const AddUser = ({ setIsOpen }) => {
         email: values.email,
         avatar: values.avatar,
       };
+
       dispatch(addUser(newUser));
-      setIsOpen(false);
       toast.success("کاربر جدید اضافه شد.");
+
+      formik.resetForm();
+      setSelectedFile(null);
+      setImagePreview(sun);
+      // setTimeout(() => setIsOpen(false), 500);
     },
   });
 
-  const handleChoiceImage = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      formik.setFieldValue("avatar", file);
-      setImagePreview(URL.createObjectURL(file));
+  const handleImage = (e) => {
+    const image = e.target.files[0];
+    if (image) {
+      console.log("img: ", image);
+      const imageURL = URL.createObjectURL(image);
+      console.log("imageURL: ", imageURL);
+      setImagePreview(imageURL);
+      formik.setFieldValue("avatar", image);
     }
   };
 
-  // Clean up object URLs to avoid memory leaks
-  useEffect(() => {
-    return () => {
-      if (imagePreview) {
-        URL.revokeObjectURL(imagePreview);
-      }
-    };
-  }, [imagePreview]);
-
   return (
     <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 pb-5">
+      {formik.values.avatar ? "عکس داره" : "عکس هنوز آپلود نشده"}
+      <div>{formik.values.first_name ? "نام داره" : "نام نداره"}</div>
       <div>
-        {imagePreview ? (
-          <img
-            src={imagePreview}
-            alt="preview"
-            className="h-[14rem] md:h-[17rem] w-full object-cover rounded-lg"
-          />
-        ) : (
-          <label
-            htmlFor="upload-file"
-            className="h-[14rem] md:h-[13rem] px-4 py-2 border-2 border-dashed border-black flex flex-col items-center justify-center rounded-lg gap-2 cursor-pointer"
-          >
-            <IoIosAdd size={50} className="font-bold" />
-            <p>بارگزاری عکس</p>
-          </label>
-        )}
-
+        {formik.values.last_name ? "نام خانوادگی داره" : "نام خانوادگی نداره"}
+      </div>
+      <div>{formik.values.email ? "ایمیل داره" : "ایمیل نداره"}</div>
+      <div>
+        <label
+          className="h-[14rem] md:h-[13rem] px-4 py-2 border-2 border-dashed border-black flex flex-col items-center justify-center rounded-lg gap-2 cursor-pointer"
+          htmlFor="upload-image"
+        >
+          بارگزاری عکس
+        </label>
         <input
           type="file"
           name="avatar"
           accept="image/*"
-          id="upload-file"
+          id="upload-image"
           className="hidden"
-          onChange={handleChoiceImage}
+          onChange={handleImage}
         />
-
+        {imagePreview ? (
+          <img
+            src={imagePreview}
+            alt="پیش‌نمایش عکس"
+            className="w-40 h-40 object-cover rounded-md mt-2"
+          />
+        ) : (
+          <div className="text-gray-500 mt-2">عکس هنوز آپلود نشده</div>
+        )}
         {formik.touched.avatar && formik.errors.avatar && (
           <div className="text-red-500 text-sm">{formik.errors.avatar}</div>
         )}
@@ -91,14 +99,14 @@ export const AddUser = ({ setIsOpen }) => {
 
       <div className="flex flex-col gap-2">
         <label htmlFor="firstName">
-          نام را وارد کنید: <span className="text-red-500">*</span>
+          نام: <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
           name="first_name"
           id="firstName"
           placeholder="نام را وارد کنید"
-          className="border border-black rounded-md px-1 py-2"
+          className="border border-black rounded-md px-2 py-2"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.first_name}
@@ -110,14 +118,14 @@ export const AddUser = ({ setIsOpen }) => {
 
       <div className="flex flex-col gap-2">
         <label htmlFor="lastName">
-          نام خانوادگی را وارد کنید: <span className="text-red-500">*</span>
+          نام خانوادگی: <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
           name="last_name"
           id="lastName"
           placeholder="نام خانوادگی را وارد کنید"
-          className="border border-black rounded-md px-1 py-2"
+          className="border border-black rounded-md px-2 py-2"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.last_name}
@@ -129,14 +137,14 @@ export const AddUser = ({ setIsOpen }) => {
 
       <div className="flex flex-col gap-2">
         <label htmlFor="email">
-          ایمیل را وارد کنید: <span className="text-red-500">*</span>
+          ایمیل: <span className="text-red-500">*</span>
         </label>
         <input
           type="email"
           name="email"
           id="email"
           placeholder="ایمیل را وارد کنید"
-          className="border border-black rounded-md px-1 py-2"
+          className="border border-black rounded-md px-2 py-2"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.email}
@@ -145,11 +153,10 @@ export const AddUser = ({ setIsOpen }) => {
           <div className="text-red-500 text-sm">{formik.errors.email}</div>
         )}
       </div>
-
       <div className="flex justify-end">
         <button
           type="submit"
-          className="w-4/12 bg-green-500 rounded-md text-white flex justify-center items-center px-4 py-1"
+          className="w-4/12 cursor-pointer bg-green-500 rounded-md text-white flex justify-center items-center px-4 py-2"
         >
           ذخیره
         </button>

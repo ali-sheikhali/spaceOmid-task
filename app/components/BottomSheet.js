@@ -12,7 +12,7 @@ export const BottomSheet = ({ isOpen, setIsOpen , title , children }) => {
       />
       {/* Bottom Sheet */}
       <div
-        className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-lg p-6 transition-transform duration-300 z-50 ${
+        className={`fixed bottom-0 left-0 right-0 bg-white text-black rounded-t-2xl shadow-lg p-6 transition-transform duration-300 z-50 ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
       >
