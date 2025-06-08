@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers, deleteUser } from "./store/usersSlice";
 import UsersTable from "./components/UsersTable";
@@ -12,6 +12,15 @@ import { IoIosAdd } from "react-icons/io";
 import { AddUser } from "./components/AddUser";
 import { IoReload } from "react-icons/io5";
 import Loading from "./loading";
+import { toast } from "sonner";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
+import { PaginationControls } from "./components/PaginationControls";
 
 export default function Home() {
   const isMobile = useIsMobile();
@@ -23,6 +32,14 @@ export default function Home() {
 
   const dispatch = useDispatch();
   const { list: users, loading, error } = useSelector((state) => state.users);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 3;
+
+  const paginatedUsers = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return users.slice(start, start + pageSize);
+  }, [users, currentPage]);
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -61,6 +78,7 @@ export default function Home() {
   // delete user
   const handleDelete = (userId) => {
     dispatch(deleteUser(userId));
+    toast.success("کاربر با موفقیت حذف شد.");
   };
 
   // edit user
@@ -83,6 +101,7 @@ export default function Home() {
       setOpenAddUserModal(true);
     }
   };
+
   return (
     <div>
       {loading && <TableLoading />}
@@ -106,9 +125,16 @@ export default function Home() {
             </button>
           </div>
           <UsersTable
-            users={users}
+            users={paginatedUsers}
             onEdit={handleEdit}
             onDelete={handleDelete}
+          />
+          {/* Pagination */}
+          <PaginationControls
+            currentPage={currentPage}
+            totalCount={users.length}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
           />
         </div>
       )}

@@ -21,7 +21,7 @@ export default function UsersTable({ users, onEdit, onDelete }) {
         cell: ({ row }) => (
           <div className="flex gap-2 justify-center">
             <button
-              className=" text-white px-2 py-1 rounded"
+              className=" text-white px-2 py-1 rounded cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit(row.original);
@@ -30,7 +30,7 @@ export default function UsersTable({ users, onEdit, onDelete }) {
               <MdOutlineEdit color="black" size={20} />
             </button>
             <button
-              className="  text-white px-2 py-1 rounded"
+              className="  text-white px-2 py-1 rounded cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete(row.original.id);

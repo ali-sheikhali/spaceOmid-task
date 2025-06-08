@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { editUser } from "../store/usersSlice";
+import { toast } from "sonner";
 
 export const EditUserModal = ({ setIsOpen, editUserData }) => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ export const EditUserModal = ({ setIsOpen, editUserData }) => {
       dispatch(editUser({ id: editUserData.id, updatedUser: values }));
       setIsOpen(false);
       formik.resetForm();
+      toast.success("کاربر با موفقیت اصلاح شد.")
     },
   });
 
