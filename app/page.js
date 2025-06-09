@@ -60,10 +60,10 @@ export default function Home() {
     if (openAddUserModal || openAddUserBottomSheet) {
       if (isMobile) {
         setOpenAddUserModal(false);
-        setOpenAddUserBottomSheet(flase);
+        setOpenAddUserBottomSheet(false);
       } else {
         setOpenAddUserBottomSheet(false);
-        setOpenAddUserModal(flase);
+        setOpenAddUserModal(false);
       }
     }
   }, [isMobile]);

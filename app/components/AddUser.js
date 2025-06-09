@@ -8,10 +8,10 @@ import { toast } from "sonner";
 import sun from "../../public/sun.jpg";
 import { IoMdClose } from "react-icons/io";
 
-export const AddUser = () => {
+export const AddUser = ({setIsOpen}) => {
   const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState(null);
-  // console.log("image prev: " , imagePreview);
+  console.log("image prev: " , imagePreview);
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required("لطفا نام را وارد کنید"),
@@ -36,16 +36,12 @@ export const AddUser = () => {
         first_name: values.first_name,
         last_name: values.last_name,
         email: values.email,
-        avatar: values.avatar,
+        avatar: imagePreview,
       };
 
       dispatch(addUser(newUser));
       toast.success("کاربر جدید اضافه شد.");
-
-      formik.resetForm();
-      setSelectedFile(null);
-      setImagePreview(sun);
-      // setTimeout(() => setIsOpen(false), 500);
+      setIsOpen(false)
     },
   });
 
@@ -57,17 +53,12 @@ export const AddUser = () => {
       console.log("imageURL: ", imageURL);
       setImagePreview(imageURL);
       formik.setFieldValue("avatar", image);
+    
     }
   };
 
   return (
     <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 pb-5">
-      {formik.values.avatar ? "عکس داره" : "عکس هنوز آپلود نشده"}
-      <div>{formik.values.first_name ? "نام داره" : "نام نداره"}</div>
-      <div>
-        {formik.values.last_name ? "نام خانوادگی داره" : "نام خانوادگی نداره"}
-      </div>
-      <div>{formik.values.email ? "ایمیل داره" : "ایمیل نداره"}</div>
       <div>
         <label
           className="h-[14rem] md:h-[13rem] px-4 py-2 border-2 border-dashed border-black flex flex-col items-center justify-center rounded-lg gap-2 cursor-pointer"
