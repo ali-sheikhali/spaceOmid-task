@@ -145,7 +145,7 @@ export default function Home() {
         setIsOpen={setOpenAddUserBottomSheet}
         title="کاربر جدید"
       >
-        <AddUser setIsOpen={setOpenAddUserBottomSheet} />
+        <AddUser key={openAddUserBottomSheet} setIsOpen={setOpenAddUserBottomSheet} />
       </BottomSheet>
 
       {/* wide screen add user*/}
@@ -154,7 +154,7 @@ export default function Home() {
         setIsOpen={setOpenAddUserModal}
         title="کاربر جدید"
       >
-        <AddUser setIsOpen={setOpenAddUserModal} />
+        <AddUser key={openAddUserModal} setIsOpen={setOpenAddUserModal} />
       </EditModal>
 
       {/* mobile edit user */}

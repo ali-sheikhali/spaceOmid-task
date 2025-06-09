@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/usersSlice";
 import { IoIosAdd } from "react-icons/io";
 import { toast } from "sonner";
-import sun from "../../public/sun.jpg";
 import { IoMdClose } from "react-icons/io";
 
-export const AddUser = ({setIsOpen}) => {
+export const AddUser = ({ setIsOpen }) => {
   const dispatch = useDispatch();
-  const [imagePreview, setImagePreview] = useState(null);
-  console.log("image prev: " , imagePreview);
+  const [image, setImage] = useState(null); // برای پیش‌نمایش
+  const [base64Image, setBase64Image] = useState(null); // برای ذخیره base64
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required("لطفا نام را وارد کنید"),
@@ -25,68 +24,68 @@ export const AddUser = ({setIsOpen}) => {
       first_name: "",
       last_name: "",
       email: "",
-      avatar: null,
+      avatar: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("values: ", values);
-
+      if (!base64Image) {
+        toast.error("لطفاً یک تصویر انتخاب کنید");
+        return;
+      }
       const newUser = {
-        id: Date.now(),
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        avatar: imagePreview,
+        ...values,
+        avatar: base64Image,
       };
 
       dispatch(addUser(newUser));
-      toast.success("کاربر جدید اضافه شد.");
-      setIsOpen(false)
+      toast.success("کاربر با موفقیت افزوده شد");
+      setIsOpen(false);
     },
   });
 
-  const handleImage = (e) => {
-    const image = e.target.files[0];
-    if (image) {
-      console.log("img: ", image);
-      const imageURL = URL.createObjectURL(image);
-      console.log("imageURL: ", imageURL);
-      setImagePreview(imageURL);
-      formik.setFieldValue("avatar", image);
-    
-    }
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      const base64 = reader.result;
+      setImage(base64);
+      setBase64Image(base64);
+      formik.setFieldValue("avatar", base64);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
-    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 pb-5">
-      <div>
-        <label
-          className="h-[14rem] md:h-[13rem] px-4 py-2 border-2 border-dashed border-black flex flex-col items-center justify-center rounded-lg gap-2 cursor-pointer"
-          htmlFor="upload-image"
-        >
-          بارگزاری عکس
-        </label>
-        <input
-          type="file"
-          name="avatar"
-          accept="image/*"
-          id="upload-image"
-          className="hidden"
-          onChange={handleImage}
-        />
-        {imagePreview ? (
+    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-2 pb-4">
+      {image ? (
+        <div className="mt-2">
           <img
-            src={imagePreview}
-            alt="پیش‌نمایش عکس"
-            className="w-40 h-40 object-cover rounded-md mt-2"
+            src={image}
+            alt="Preview"
+            className="w-full h-[10rem] border rounded"
           />
-        ) : (
-          <div className="text-gray-500 mt-2">عکس هنوز آپلود نشده</div>
-        )}
-        {formik.touched.avatar && formik.errors.avatar && (
-          <div className="text-red-500 text-sm">{formik.errors.avatar}</div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div>
+          <label
+            htmlFor="image"
+            className="h-[11rem] px-4 py-2 border border-black border-dashed  flex flex-col items-center justify-center rounded-lg gap-2 cursor-pointer"
+          >
+            تصویر پروفایل
+          </label>
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="text-white"
+          />
+        </div>
+      )}
 
       <div className="flex flex-col gap-2">
         <label htmlFor="firstName">
@@ -103,7 +102,7 @@ export const AddUser = ({setIsOpen}) => {
           value={formik.values.first_name}
         />
         {formik.touched.first_name && formik.errors.first_name && (
-          <div className="text-red-500 text-sm">{formik.errors.first_name}</div>
+          <div className="text-red-500 text-[10px]">{formik.errors.first_name}</div>
         )}
       </div>
 
@@ -122,7 +121,7 @@ export const AddUser = ({setIsOpen}) => {
           value={formik.values.last_name}
         />
         {formik.touched.last_name && formik.errors.last_name && (
-          <div className="text-red-500 text-sm">{formik.errors.last_name}</div>
+          <div className="text-red-500 text-[10px]">{formik.errors.last_name}</div>
         )}
       </div>
 
@@ -141,9 +140,10 @@ export const AddUser = ({setIsOpen}) => {
           value={formik.values.email}
         />
         {formik.touched.email && formik.errors.email && (
-          <div className="text-red-500 text-sm">{formik.errors.email}</div>
+          <div className="text-red-500 text-[10px]">{formik.errors.email}</div>
         )}
       </div>
+
       <div className="flex justify-end">
         <button
           type="submit"
