@@ -5,12 +5,12 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../store/usersSlice";
 import { IoIosAdd } from "react-icons/io";
 import { toast } from "sonner";
-import { IoMdClose } from "react-icons/io";
+import { v4 as uuidv4 } from 'uuid';
 
 export const AddUser = ({ setIsOpen }) => {
   const dispatch = useDispatch();
-  const [image, setImage] = useState(null); // برای پیش‌نمایش
-  const [base64Image, setBase64Image] = useState(null); // برای ذخیره base64
+  const [image, setImage] = useState(null);
+  const [base64Image, setBase64Image] = useState(null);
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required("لطفا نام را وارد کنید"),
@@ -33,6 +33,7 @@ export const AddUser = ({ setIsOpen }) => {
         return;
       }
       const newUser = {
+         id: uuidv4(),
         ...values,
         avatar: base64Image,
       };

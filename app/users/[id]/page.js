@@ -13,7 +13,7 @@ const UserDetails = () => {
   const users = useSelector((state) => state.users.list);
   const isLoading = useSelector((state) => state.users.loading);
 
-  const user = users?.find((u) => u.id === Number(id));
+const user = users?.find((u) => String(u.id) === id);
 
   if (!users || users.length === 0) {
     return (
