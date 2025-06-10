@@ -117,7 +117,7 @@ export default function Home() {
               <IoIosAdd size={25} />
             </button>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => dispatch(fetchUsers())}
               className="bg-[#092748] cursor-pointer flex items-center gap-1 text-white text-sm px-3 py-1 rounded-md"
             >
               بارگزاری مجدد

@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/usersSlice";
-import { IoIosAdd } from "react-icons/io";
 import { toast } from "sonner";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export const AddUser = ({ setIsOpen }) => {
   const dispatch = useDispatch();
   const [image, setImage] = useState(null);
   const [base64Image, setBase64Image] = useState(null);
+  const inputFileRef = useRef(null);
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required("لطفا نام را وارد کنید"),
@@ -33,7 +33,7 @@ export const AddUser = ({ setIsOpen }) => {
         return;
       }
       const newUser = {
-         id: uuidv4(),
+        id: uuidv4(),
         ...values,
         avatar: base64Image,
       };
@@ -49,20 +49,22 @@ export const AddUser = ({ setIsOpen }) => {
     if (!file) return;
 
     const reader = new FileReader();
-
     reader.onloadend = () => {
       const base64 = reader.result;
       setImage(base64);
       setBase64Image(base64);
       formik.setFieldValue("avatar", base64);
+      if (inputFileRef.current) {
+        inputFileRef.current.value = "";
+      }
     };
-
     reader.readAsDataURL(file);
   };
 
   return (
     <form onSubmit={formik.handleSubmit} className="flex flex-col gap-2 pb-4">
-      {image ? (
+      <div className="relative">
+         {image ? (
         <div className="mt-2">
           <img
             src={image}
@@ -88,6 +90,14 @@ export const AddUser = ({ setIsOpen }) => {
         </div>
       )}
 
+        {formik.touched.avatar && formik.errors.avatar && (
+          <div className="text-red-500 text-[10px] absolute bottom-1">
+            {formik.errors.avatar}
+          </div>
+        )}
+      </div>
+
+      {/* بقیه فرم */}
       <div className="flex flex-col gap-2">
         <label htmlFor="firstName">
           نام: <span className="text-red-500">*</span>
